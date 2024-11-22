@@ -55,6 +55,7 @@ const sections = {
 };
 
 // Define routes to serve each section
+app.get('/',(req,res) => res.json("hello message"));
 app.get('/undyed-yarn', (req, res) => res.json(sections.undyedYarnData));
 app.get('/available-section', (req, res) => res.json(sections.availableSectionData));
 app.get('/dyed-store', (req, res) => res.json(sections.dyedStoreData));
