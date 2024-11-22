@@ -7,7 +7,7 @@ module.exports = app; // CommonJS syntax
  // Change to ES module syntax
 const PORT = 3000;
 app.use(cors({
-    origin: 'http://localhost:3001', // Allow requests only from your frontend domain (localhost:3001)
+    origin: '*', // Allow requests only from your frontend domain (localhost:3001)
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true // Optional, if you need to send cookies with the requests
 }));
