@@ -19,8 +19,8 @@ const TotalColors = () => {
         // Process the valid data into a format suitable for the chart and table
         const processedData = validData.map(item => ({
           color: item["COLORS"], // Use 'COLORS' as the color label
-          total: parseFloat(item["Total COST "] || 0).toFixed(2), // Round 'Total COST ' to 2 decimals
-          costPerKg: parseFloat(item[" Cost per kg"] || 0).toFixed(2), // Add 'Cost per kg' value
+          total: parseFloat(item["Total COST"] || 0).toFixed(2), // Round 'Total COST ' to 2 decimals
+          costPerKg: parseFloat(item["Cost per kg"] || 0).toFixed(2)  , // Add 'Cost per kg' value
           inGram: parseFloat(item["in GRAM"] || 0).toFixed(2), // Add 'in GRAM' value
         }));
 
@@ -30,8 +30,8 @@ const TotalColors = () => {
         // Set the total color data separately for display
         if (totalData) {
           setTotalColorData({
-            totalColorUsed: parseFloat(totalData["Total COST "] || 0).toFixed(2),
-            totalCost: parseFloat(totalData["Total COST "] || 0).toFixed(2),
+            totalColorUsed: parseFloat(totalData["Total COST"] || 0).toFixed(2),
+            totalCost: parseFloat(totalData["Total COST"] || 0).toFixed(2),
           });
         }
       })
