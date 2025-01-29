@@ -1,29 +1,43 @@
 import { MongoClient } from 'mongodb';
 
-// const MONGO_URI = 'mongodb://localhost:27017'; // Replace with your MongoDB URI
-const MONGO_URI='mongodb+srv://ngawang:ngawang@cluster0.gdjtgmf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
-const DATABASE_NAME = 'consolidated'; // Replace with your database name
+const MONGO_URI = 'mongodb+srv://ngawang:ngawang@cluster0.gdjtgmf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const DATABASE_NAME = 'consolidated';
+
+let client;
 let db;
 
-// MongoDB Connection Initialization
 const connectToDatabase = async () => {
   if (db) return db;
   try {
-    const client = await MongoClient.connect(MONGO_URI, { useUnifiedTopology: true });
+    client = new MongoClient(MONGO_URI);
+    await client.connect();
     db = client.db(DATABASE_NAME);
+    console.log('✅ Connected to MongoDB');
     return db;
   } catch (error) {
-    console.error('Failed to connect to MongoDB', error);
+    console.error('❌ MongoDB connection error:', error);
     throw error;
   }
 };
 
+// API Route Handler with CORS
 export default async (req, res) => {
-  const db = await connectToDatabase();
+  // Set CORS Headers
+  res.setHeader('Access-Control-Allow-Origin', 'https://consolidated-report-frontend.vercel.app'); // Allow your frontend
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   try {
+    const db = await connectToDatabase();
     const data = await db.collection('undyed_yarn').find().toArray();
     res.status(200).json(data);
   } catch (error) {
+    console.error('❌ Failed to fetch data:', error);
     res.status(500).json({ error: 'Failed to fetch undyed yarn data' });
   }
 };
