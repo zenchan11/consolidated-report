@@ -8,7 +8,7 @@ function YarnIssued() {
     const [loading, setLoading] = useState(true); // State for loading status
 
     useEffect(() => {
-        fetch('http://localhost:3000/undyed-yarn')  // API endpoint
+        fetch('https://consolidated-backend-tan.vercel.app/api/undyed-yarn')  // API endpoint
             .then((response) => response.json())
             .then((data) => {
                 const yarnTypes = [...new Set(data.map(item => item.Type))];

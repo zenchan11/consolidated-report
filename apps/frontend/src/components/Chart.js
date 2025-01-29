@@ -6,7 +6,7 @@ function Chart({ height, title }) {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:3000/total-order-received') // Replace with your endpoint
+        fetch('https://consolidated-backend-tan.vercel.app/api/total-order-received') // Replace with your endpoint
             .then((response) => response.json())
             .then((rawData) => {
                 // Filter and transform the data

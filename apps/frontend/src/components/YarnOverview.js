@@ -10,7 +10,7 @@ function YarnOverview() {
     const roundToTwo = (num) => Math.round((num + Number.EPSILON) * 100) / 100;
 
     useEffect(() => {
-        fetch('http://localhost:3000/dyed-store') // API endpoint
+        fetch('https://consolidated-backend-tan.vercel.app/api/dyed-store') // API endpoint
             .then((response) => response.json())
             .then((data) => {
                 const yarnTypes = [...new Set(data.map(item => item.Type))];

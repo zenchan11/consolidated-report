@@ -9,7 +9,7 @@ const TotalColors = () => {
 
   // Fetch the data from the API on component mount
   useEffect(() => {
-    fetch('http://localhost:3000/total-color-used') // Assuming the API is running locally on this endpoint
+    fetch('https://consolidated-backend-tan.vercel.app/api/total-color-used') // Assuming the API is running locally on this endpoint
       .then(response => response.json())
       .then(data => {
         // Filter out the total summary data and store separately
