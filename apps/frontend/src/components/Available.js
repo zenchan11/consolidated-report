@@ -8,7 +8,7 @@ function Available() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch('/api/available-section') // Updated API endpoint for available yarn
+        fetch('https://consolidated-backend-tan.vercel.app/api/available-section') // Updated API endpoint for available yarn
         // fetch('http://localhost:3000/available-section') // Updated API endpoint for available yarn
             .then((response) => response.json())
             .then((data) => {
