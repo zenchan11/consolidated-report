@@ -8,7 +8,8 @@ function Available() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch('http://localhost:3000/available-section') // Updated API endpoint for available yarn
+        fetch('/api/available-section') // Updated API endpoint for available yarn
+        // fetch('http://localhost:3000/available-section') // Updated API endpoint for available yarn
             .then((response) => response.json())
             .then((data) => {
                 const yarnTypes = [...new Set(data.map(item => item.Type))];
