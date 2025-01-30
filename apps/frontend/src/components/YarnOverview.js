@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import './YarnOverview.scss';
+import { helix } from 'ldrs'
+
+helix.register()
+
+// Default values shown
 
 function YarnOverview() {
     const [transformedData, setTransformedData] = useState([]);
@@ -51,7 +56,11 @@ function YarnOverview() {
     }, []);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <l-helix size="45" speed="2" color="#536def"></l-helix> {/* Use the Helix loader */}
+            </div>
+        );
     }
 
     const yarnColors = {
