@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { DotLoader } from '@uiball/loaders'; // Use DotLoader or GridLoader
+import { ring } from 'ldrs'; // Import the ring loader
 import './Available.scss';
+
+// Register the ring loader
+ring.register();
 
 function Available() {
     const [transformedData, setTransformedData] = useState([]);
@@ -51,7 +54,7 @@ function Available() {
     if (loading) {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                <DotLoader size={45} speed={2} color="#536def" /> {/* Use DotLoader or GridLoader */}
+                <l-ring size="45" stroke="5" bg-opacity="0" speed="2" color="#536def"></l-ring> {/* Use the ring loader */}
             </div>
         );
     }
