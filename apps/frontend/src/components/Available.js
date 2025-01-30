@@ -4,7 +4,7 @@ import { grid } from 'ldrs'; // Import the ring loader
 import './Available.scss';
 
 // Register the ring loader
-gird.register();
+grid.register();
 
 function Available() {
     const [transformedData, setTransformedData] = useState([]);
