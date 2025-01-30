@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { RingLoader } from '@uiball/loaders'; // Import the loader
+import { DotLoader } from '@uiball/loaders'; // Use DotLoader or GridLoader
 import './Available.scss';
 
 function Available() {
@@ -9,7 +9,7 @@ function Available() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch('https://consolidated-backend-tan.vercel.app/api/available-section') // Updated API endpoint for available yarn
+        fetch('https://consolidated-backend-tan.vercel.app/api/available-section')
             .then((response) => response.json())
             .then((data) => {
                 const yarnTypes = [...new Set(data.map(item => item.Type))];
@@ -51,7 +51,7 @@ function Available() {
     if (loading) {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                <RingLoader size={45} speed={2} color="#536def" /> {/* Customize size, speed, and color */}
+                <DotLoader size={45} speed={2} color="#536def" /> {/* Use DotLoader or GridLoader */}
             </div>
         );
     }
