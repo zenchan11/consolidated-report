@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts';
 import './chart.scss';
+import { infinity} from 'ldrs';
+
+infinity.register()
 
 function Chart({ height, title }) {
     const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetch('https://consolidated-backend-tan.vercel.app/api/total-order-received') // Replace with your endpoint
@@ -18,10 +22,19 @@ function Chart({ height, title }) {
                         CS: row["C Total Sq. mt."] || 0,
                     }));
                 setData(cleanedData);
+                setLoading(false);
             })
             .catch((error) => console.error('Error fetching chart data:', error));
+            setLoading(false);
     }, []);
 
+    if (loading) {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <l-infinity size="55" stroke="4" stroke-length="0.15" bg-opacity="0.1" speed="1.3" color="black"></l-infinity>
+            </div>
+        );
+    }
     // Calculate total FS and CS, and total combined sum
     const totalFS = data.reduce((sum, row) => sum + row.FS, 0).toFixed(2);
     const totalCS = data.reduce((sum, row) => sum + row.CS, 0).toFixed(2);

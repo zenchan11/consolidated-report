@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import './TotalColors.scss'; // Import the SCSS file
+import { zoomies} from 'ldrs';
+
+zoomies.register()
 
 const TotalColors = () => {
   // State to hold the fetched color data
   const [colorData, setColorData] = useState([]);
   const [totalColorData, setTotalColorData] = useState(null); // State for the total color data
-
+  const [loading, setLoading] = useState(true);
   // Fetch the data from the API on component mount
   useEffect(() => {
     fetch('https://consolidated-backend-tan.vercel.app/api/total-color-used') // Assuming the API is running locally on this endpoint
@@ -34,12 +37,21 @@ const TotalColors = () => {
             totalCost: parseFloat(totalData["Total COST"] || 0).toFixed(2),
           });
         }
+        setLoading(false)
       })
       .catch(error => {
+        setLoading(false)
         console.error('Error fetching the color data:', error);
       });
   }, []); // Empty dependency array ensures the effect runs only once when the component mounts
 
+  if (loading) {
+    return (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <l-zoomies size="80" stroke="5" bg-opacity="0.1" speed="1.4" color="black"></l-zoomies>
+        </div>
+    );
+}
   // Calculate the maximum value for Y-axis domain
   const maxTotal = Math.max(...colorData.map(item => parseFloat(item.total)));
 

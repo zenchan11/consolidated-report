@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import './YarnIssued.scss';
+import { hourglass} from 'ldrs'
+
+hourglass.register()
 
 function YarnIssued() {
     const [transformedData, setTransformedData] = useState([]); // Transformed data for the table
@@ -47,7 +50,11 @@ function YarnIssued() {
     }, []);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <l-hourglass size="40" bg-opacity="0.1" speed="1.75" color="black"></l-hourglass>
+            </div>
+        );
     }
 
     const yarnColors = {
