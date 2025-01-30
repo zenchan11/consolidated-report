@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { ripples } from 'ldrs'; // Import the ring loader
+import { grid } from 'ldrs'; // Import the ring loader
 import './Available.scss';
 
 // Register the ring loader
-ripples.register();
+gird.register();
 
 function Available() {
     const [transformedData, setTransformedData] = useState([]);
@@ -54,7 +54,7 @@ function Available() {
     if (loading) {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                <l-ripples size="45" speed="2" color="black"></l-ripples>
+                <l-grid size="60" speed="1.5" color="black"></l-grid>
             </div>
         );
     }
