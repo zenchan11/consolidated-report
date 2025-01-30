@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { ring } from 'ldrs'; // Import the ring loader
+import { ripples } from 'ldrs'; // Import the ring loader
 import './Available.scss';
 
 // Register the ring loader
-ring.register();
+ripples.register();
 
 function Available() {
     const [transformedData, setTransformedData] = useState([]);
@@ -54,7 +54,7 @@ function Available() {
     if (loading) {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                <l-ring size="45" stroke="5" bg-opacity="0" speed="2" color="#536def"></l-ring> {/* Use the ring loader */}
+                <l-ripples size="45" speed="2" color="black"></l-ripples>
             </div>
         );
     }
