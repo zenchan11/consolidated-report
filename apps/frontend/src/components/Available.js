@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { RingLoader } from '@uiball/loaders'; // Import the loader
 import './Available.scss';
 
 function Available() {
@@ -9,7 +10,6 @@ function Available() {
 
     useEffect(() => {
         fetch('https://consolidated-backend-tan.vercel.app/api/available-section') // Updated API endpoint for available yarn
-        // fetch('http://localhost:3000/available-section') // Updated API endpoint for available yarn
             .then((response) => response.json())
             .then((data) => {
                 const yarnTypes = [...new Set(data.map(item => item.Type))];
@@ -47,8 +47,13 @@ function Available() {
             });
     }, []);
 
+    // Show the loader while data is being fetched
     if (loading) {
-        return <div>Loading...</div>;
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <RingLoader size={45} speed={2} color="#536def" /> {/* Customize size, speed, and color */}
+            </div>
+        );
     }
 
     const yarnColors = {
