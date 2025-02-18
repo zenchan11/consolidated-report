@@ -18,7 +18,7 @@ function App() {
         {/* Sidebar navigation */}
         <aside className="sidebar">
           <div className="logo">
-            <Link to="/" className="text_none">My App</Link>
+            <Link to="/" className="text_none">My App Testing</Link>
           </div>
           <div className="links">
             <ul>
