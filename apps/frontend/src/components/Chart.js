@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts';
-import './chart.scss';
 import { infinity} from 'ldrs';
+import { Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import './chart.scss';
 
 infinity.register()
 
@@ -35,6 +37,7 @@ function Chart({ height, title }) {
             </div>
         );
     }
+
     // Calculate total FS and CS, and total combined sum
     const totalFS = data.reduce((sum, row) => sum + row.FS, 0).toFixed(2);
     const totalCS = data.reduce((sum, row) => sum + row.CS, 0).toFixed(2);
@@ -88,26 +91,33 @@ function Chart({ height, title }) {
                 </AreaChart>
             </div>
 
-            {/* Table Section */}
+            {/* Table Section with Accordion */}
             <div className="table_sec" style={{ marginTop: '20px' }}>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Party Name</th>
-                            <th>F Total Sq.mt</th>
-                            <th>C Total Sq.mt</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data.map((row, index) => (
-                            <tr key={index}>
-                                <td>{row.name}</td>
-                                <td>{row.FS}</td>
-                                <td>{row.CS}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <Accordion>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                        <Typography>Table Data</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Party Name</th>
+                                    <th>F Total Sq.mt</th>
+                                    <th>C Total Sq.mt</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.map((row, index) => (
+                                    <tr key={index}>
+                                        <td>{row.name}</td>
+                                        <td>{row.FS}</td>
+                                        <td>{row.CS}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </AccordionDetails>
+                </Accordion>
             </div>
 
             {/* Total Sum Section */}

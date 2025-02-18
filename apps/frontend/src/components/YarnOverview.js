@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import './YarnOverview.scss';
-import { helix } from 'ldrs'
+import { helix } from 'ldrs';
+import { Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-helix.register()
-
-// Default values shown
+helix.register();
 
 function YarnOverview() {
     const [transformedData, setTransformedData] = useState([]);
@@ -15,13 +15,12 @@ function YarnOverview() {
     const roundToTwo = (num) => Math.round((num + Number.EPSILON) * 100) / 100;
 
     useEffect(() => {
-        fetch('https://consolidated-backend-tan.vercel.app/api/dyed-store') // API endpoint
+        fetch('https://consolidated-backend-tan.vercel.app/api/dyed-store')
             .then((response) => response.json())
             .then((data) => {
                 const yarnTypes = [...new Set(data.map(item => item.Type))];
                 const weeks = [1, 2, 3, 4];
 
-                // Prepare table data
                 const tableData = yarnTypes.map(type => {
                     const row = { type };
                     weeks.forEach(week => {
@@ -33,7 +32,6 @@ function YarnOverview() {
                     return row;
                 });
 
-                // Prepare chart data
                 const chartData = weeks.map(week => {
                     let weekData = { name: `Week ${week}` };
                     yarnTypes.forEach(type => {
@@ -113,44 +111,51 @@ function YarnOverview() {
                 </BarChart>
             </ResponsiveContainer>
 
-            {/* Data Table */}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Yarn Type</th>
-                        {[1, 2, 3, 4].map(week => (
-                            <th key={week} colSpan={3}>Week {week}</th>
-                        ))}
-                    </tr>
-                    <tr>
-                        <th></th>
-                        {[1, 2, 3, 4].map(week => (
-                            <>
-                                <th key={`week${week}_received`}>Received</th>
-                                <th key={`week${week}_issued`}>Issued</th>
-                                <th key={`week${week}_returned`}>Returned</th>
-                            </>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {transformedData.map((row, index) => (
-                        <tr key={index}>
-                            <td>{row.type}</td>
-                            {Array.from({ length: 4 }, (_, weekIndex) => {
-                                const week = weekIndex + 1;
-                                return (
-                                    <React.Fragment key={week}>
-                                        <td>{row[`week${week}_received`].toFixed(2)}</td>
-                                        <td>{row[`week${week}_issued`].toFixed(2)}</td>
-                                        <td>{row[`week${week}_returned`].toFixed(2)}</td>
-                                    </React.Fragment>
-                                );
-                            })}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            {/* Accordion for Data Table */}
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                    <Typography>Yarn Data Table</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Yarn Type</th>
+                                {[1, 2, 3, 4].map(week => (
+                                    <th key={week} colSpan={3}>Week {week}</th>
+                                ))}
+                            </tr>
+                            <tr>
+                                <th></th>
+                                {[1, 2, 3, 4].map(week => (
+                                    <>
+                                        <th key={`week${week}_received`}>Received</th>
+                                        <th key={`week${week}_issued`}>Issued</th>
+                                        <th key={`week${week}_returned`}>Returned</th>
+                                    </>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {transformedData.map((row, index) => (
+                                <tr key={index}>
+                                    <td>{row.type}</td>
+                                    {Array.from({ length: 4 }, (_, weekIndex) => {
+                                        const week = weekIndex + 1;
+                                        return (
+                                            <React.Fragment key={week}>
+                                                <td>{row[`week${week}_received`].toFixed(2)}</td>
+                                                <td>{row[`week${week}_issued`].toFixed(2)}</td>
+                                                <td>{row[`week${week}_returned`].toFixed(2)}</td>
+                                            </React.Fragment>
+                                        );
+                                    })}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </AccordionDetails>
+            </Accordion>
         </div>
     );
 }

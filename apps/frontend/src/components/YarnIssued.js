@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import './YarnIssued.scss';
-import { hourglass} from 'ldrs'
+import { hourglass } from 'ldrs';
+import { Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-hourglass.register()
+hourglass.register();
 
 function YarnIssued() {
     const [transformedData, setTransformedData] = useState([]); // Transformed data for the table
@@ -63,10 +65,31 @@ function YarnIssued() {
         Cotton: '#4caf50',
     };
 
+    // Function to render bars dynamically for each yarn type
+    const renderBars = (type, index) => (
+        <>
+            <Bar
+                dataKey={`${type}_in`}
+                name={`${type} - In`}
+                fill={yarnColors[type]}
+                barSize={25}
+                stackId={`stack${index}`}
+            />
+            <Bar
+                dataKey={`${type}_out`}
+                name={`${type} - Out`}
+                fill={yarnColors[type]}
+                barSize={25}
+                stackId={`stack${index}`}
+            />
+        </>
+    );
+
     return (
         <div className="yarn-issued">
             <h2>Yarn Issued Weekly Data</h2>
 
+            {/* Bar Chart */}
             <ResponsiveContainer width="100%" height={400}>
                 <BarChart
                     data={chartData}
@@ -78,66 +101,57 @@ function YarnIssued() {
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    {/* Dynamically map each yarn type */}
                     {Object.keys(yarnColors).map((type, index) => (
                         <React.Fragment key={type}>
-                            {/* "Issued" bars for the type */}
-                            <Bar
-                                dataKey={`${type}_in`}
-                                name={`${type} - Issued`}
-                                fill={yarnColors[type]}
-                                barSize={25} // Thicker bars
-                                stackId={`stack${index}`} // Group bars by yarn type but separate in/out
-                            />
-                            {/* "Received" bars for the type */}
-                            <Bar
-                                dataKey={`${type}_out`}
-                                name={`${type} - Received`}
-                                fill={yarnColors[type]}
-                                barSize={25} // Thicker bars
-                                stackId={`stack${index}`} // Group bars by yarn type but separate in/out
-                            />
+                            {renderBars(type, index)} {/* Render bars dynamically */}
                         </React.Fragment>
                     ))}
                 </BarChart>
             </ResponsiveContainer>
 
-            {/* Table */}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Yarn Type</th>
-                        {[1, 2, 3, 4].map(week => (
-                            <th key={week} colSpan={2}>Week {week}</th>
-                        ))}
-                    </tr>
-                    <tr>
-                        <th></th>
-                        {[1, 2, 3, 4].map(week => (
-                            <>
-                                <th key={`week${week}_in`}>In</th>
-                                <th key={`week${week}_out`}>Out</th>
-                            </>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {transformedData.map((row, index) => (
-                        <tr key={index}>
-                            <td>{row.type}</td>
-                            {Array.from({ length: 4 }, (_, weekIndex) => {
-                                const week = weekIndex + 1;
-                                return (
-                                    <React.Fragment key={week}>
-                                        <td>{parseFloat(row[`week${week}_in`]).toFixed(2)}</td>
-                                        <td>{parseFloat(row[`week${week}_out`]).toFixed(2)}</td>
-                                    </React.Fragment>
-                                );
-                            })}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            {/* Accordion for Data Table */}
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                    <Typography>Yarn Data Table</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Yarn Type</th>
+                                {[1, 2, 3, 4].map(week => (
+                                    <th key={week} colSpan={2}>Week {week}</th>
+                                ))}
+                            </tr>
+                            <tr>
+                                <th></th>
+                                {[1, 2, 3, 4].map(week => (
+                                    <>
+                                        <th key={`week${week}_in`}>In</th>
+                                        <th key={`week${week}_out`}>Out</th>
+                                    </>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {transformedData.map((row, index) => (
+                                <tr key={index}>
+                                    <td>{row.type}</td>
+                                    {Array.from({ length: 4 }, (_, weekIndex) => {
+                                        const week = weekIndex + 1;
+                                        return (
+                                            <React.Fragment key={week}>
+                                                <td>{parseFloat(row[`week${week}_in`]).toFixed(2)}</td>
+                                                <td>{parseFloat(row[`week${week}_out`]).toFixed(2)}</td>
+                                            </React.Fragment>
+                                        );
+                                    })}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </AccordionDetails>
+            </Accordion>
         </div>
     );
 }
