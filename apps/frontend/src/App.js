@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-
+import Login from './components/Login';
 import DyeingReports from './components/DyeingReports';
 import DyeingMasters from './components/DyeingMasters';
 import YarnIssued from './components/YarnIssued';
@@ -8,10 +8,13 @@ import TotalSqmtOfCarpets from './components/TotalSqmtOfCarpets';
 import Available from './components/Available';
 import Dashboard from './components/Dashboard';
 import YarnOverview from './components/YarnOverview';
-import TotalColors from './components/totalcolors';
+import TotalColors from './components/TotalColors';
+import ProtectedRoute from './components/ProtectedRoute';
 import './App.scss';
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   return (
     <Router>
       <div className="app">
@@ -65,7 +68,6 @@ function App() {
                   Available
                 </Link>
               </li>
-              {/* New Total Colors Link */}
               <li>
                 <Link to="/total-colors" className="text_none">
                   <span className="icon">🎨</span>
@@ -79,15 +81,71 @@ function App() {
         {/* Main content */}
         <main className="content">
           <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/dyeing-reports" element={<DyeingReports />} />
-            <Route path="/dyeing-masters" element={<DyeingMasters />} />
-            <Route path="/yarn-issued" element={<YarnIssued />} />
-            <Route path="/total-sqmt-of-carpets" element={<TotalSqmtOfCarpets />} />
-            <Route path="/available" element={<Available />} />
-            <Route path="/yarn-overview" element={<YarnOverview />} />
-            <Route path="/total-colors" element={<TotalColors />} /> {/* Total Colors Route */}
+            <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dyeing-reports"
+              element={
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <DyeingReports />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dyeing-masters"
+              element={
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <DyeingMasters />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/yarn-issued"
+              element={
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <YarnIssued />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/total-sqmt-of-carpets"
+              element={
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <TotalSqmtOfCarpets />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/available"
+              element={
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <Available />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/yarn-overview"
+              element={
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <YarnOverview />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/total-colors"
+              element={
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <TotalColors />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </main>
       </div>

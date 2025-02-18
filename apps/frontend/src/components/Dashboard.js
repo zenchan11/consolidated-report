@@ -4,7 +4,7 @@ import DyeingMasters from './DyeingMasters';
 import YarnIssued from './YarnIssued';
 import TotalSqmtOfCarpets from './TotalSqmtOfCarpets';
 import Available from './Available';
-import Totalcolors from './totalcolors';
+import TotalColors from './TotalColors';
 import { Link } from 'react-router-dom';
 import './Dashboard.scss'; // Import your custom CSS for dashboard
 
@@ -37,7 +37,7 @@ function Dashboard() {
                 </div>
                 <div className="kpi-item">
                     <h3>Total Colors</h3>
-                    <Totalcolors />
+                    <TotalColors />
                 </div>
             </div>
 
