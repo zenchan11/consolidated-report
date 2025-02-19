@@ -12,7 +12,7 @@ const Login = ({ setIsAuthenticated }) => {
     e.preventDefault();
 
     // Hardcoded credentials
-    if (username === 'admin' && password === 'password') {
+    if ((username === 'admin' &&  password === 'password')|| (username === 'tibet' && password === 'tibetcarpet')) {
       setIsAuthenticated(true);
       navigate('/dashboard'); // Redirect to dashboard after login
     } else {

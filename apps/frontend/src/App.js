@@ -1,24 +1,26 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import Login from './components/Login';
-import DyeingReports from './components/DyeingReports';
-import DyeingMasters from './components/DyeingMasters';
-import YarnIssued from './components/YarnIssued';
-import TotalSqmtOfCarpets from './components/TotalSqmtOfCarpets';
-import Available from './components/Available';
-import Dashboard from './components/Dashboard';
-import YarnOverview from './components/YarnOverview';
-import TotalColors from './components/TotalColors';
-import ProtectedRoute from './components/ProtectedRoute';
-import './App.scss';
+import React, { useState } from "react";
+import { Route, Routes, Link, useLocation, Navigate } from "react-router-dom";
+import Login from "./components/Login";
+import DyeingReports from "./components/DyeingReports";
+import DyeingMasters from "./components/DyeingMasters";
+import YarnIssued from "./components/YarnIssued";
+import TotalSqmtOfCarpets from "./components/TotalSqmtOfCarpets";
+import Available from "./components/Available";
+import Dashboard from "./components/Dashboard";
+import YarnOverview from "./components/YarnOverview";
+import TotalColors from "./components/TotalColors";
+import ProtectedRoute from "./components/ProtectedRoute";
+import "./App.scss";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const location = useLocation();
+
+  const isLoginPage = location.pathname === "/";
 
   return (
-    <Router>
-      <div className="app">
-        {/* Sidebar navigation */}
+    <div className="app">
+      {!isLoginPage && (
         <aside className="sidebar">
           <div className="logo">
             <Link to="/" className="text_none">My App Testing</Link>
@@ -77,79 +79,85 @@ function App() {
             </ul>
           </div>
         </aside>
+      )}
 
-        {/* Main content */}
-        <main className="content">
-          <Routes>
-            <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute isAuthenticated={isAuthenticated}>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/dyeing-reports"
-              element={
-                <ProtectedRoute isAuthenticated={isAuthenticated}>
-                  <DyeingReports />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/dyeing-masters"
-              element={
-                <ProtectedRoute isAuthenticated={isAuthenticated}>
-                  <DyeingMasters />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/yarn-issued"
-              element={
-                <ProtectedRoute isAuthenticated={isAuthenticated}>
-                  <YarnIssued />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/total-sqmt-of-carpets"
-              element={
-                <ProtectedRoute isAuthenticated={isAuthenticated}>
-                  <TotalSqmtOfCarpets />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/available"
-              element={
-                <ProtectedRoute isAuthenticated={isAuthenticated}>
-                  <Available />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/yarn-overview"
-              element={
-                <ProtectedRoute isAuthenticated={isAuthenticated}>
-                  <YarnOverview />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/total-colors"
-              element={
-                <ProtectedRoute isAuthenticated={isAuthenticated}>
-                  <TotalColors />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+      <main className={`content ${isLoginPage ? "full-page" : ""}`}>
+        <Routes>
+          {/* Redirect to Dashboard if already authenticated */}
+          <Route
+            path="/"
+            element={
+              isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login setIsAuthenticated={setIsAuthenticated} />
+            }
+          />
+
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dyeing-reports"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <DyeingReports />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dyeing-masters"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <DyeingMasters />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/yarn-issued"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <YarnIssued />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/total-sqmt-of-carpets"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <TotalSqmtOfCarpets />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/available"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <Available />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/yarn-overview"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <YarnOverview />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/total-colors"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <TotalColors />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </main>
+    </div>
   );
 }
 
