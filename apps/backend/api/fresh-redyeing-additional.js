@@ -34,7 +34,7 @@ export default async (req, res) => {
 
   try {
     const db = await connectToDatabase();
-    const data = await db.collection('fresh_redyeing_additional').find().toArray();
+    const data = await db.collection('fresh_redyeing_additional_').find().toArray();
     res.status(200).json(data);
   } catch (error) {
     console.error('❌ Failed to fetch data:', error);

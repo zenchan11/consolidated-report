@@ -82,6 +82,14 @@ app.get('/party-total', async (req, res) => {
     }
 });
 
+app.get('/matching-efficiency', async (req, res) => {
+    try {
+        const data = await db.collection('matching_efficiency').find().toArray(); // Replace with your collection name
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch party total data' });
+    }
+});
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
