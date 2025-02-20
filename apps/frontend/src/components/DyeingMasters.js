@@ -1,25 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { helix } from 'ldrs';
+helix.register();
 
 function DyeingMasters() {
-    // Example data for the dyeing masters and their efficiency percentages
-    const data = [
-        { name: 'Master 1', efficiency: 20, efficiency2: 30, efficiency3: 30 },
-        { name: 'Master 2', efficiency: 90, efficiency2: 92, efficiency3: 85 },
-        { name: 'Master 3', efficiency: 180, efficiency2: 188, efficiency3: 278 },
-        { name: 'Master 4', efficiency: 195, efficiency2: 297, efficiency3: 392 },
-        { name: 'Master 5', efficiency: 288, efficiency2: 390, efficiency3: 489 },
-    ];
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const [activeIndex, setActiveIndex] = useState(null);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('https://consolidated-backend-tan.vercel.app/api/matching-efficiency');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+                const result = await response.json();
+                setData(result);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
 
-    const handleAreaEnter = (index) => {
-        setActiveIndex(index);
-    };
+    if (loading) {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <l-helix size="45" speed="2" color="#536def"></l-helix> {/* Use the Helix loader */}
+            </div>
+        );
+    }
 
-    const handleAreaLeave = () => {
-        setActiveIndex(null);
-    };
+    if (error) return <p>Error: {error}</p>;
 
     return (
         <div className="dyeing-masters">
@@ -31,42 +46,9 @@ function DyeingMasters() {
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    {/* Area for Master 1 */}
-                    <Area
-                        type="monotone"
-                        dataKey="efficiency"
-                        stroke="#536def"
-                        fill="#536def"
-                        fillOpacity={0.4}
-                        onMouseEnter={handleAreaEnter}
-                        onMouseLeave={handleAreaLeave}
-                        strokeWidth={2}
-                        name="Master 1"
-                    />
-                    {/* Area for Master 2 */}
-                    <Area
-                        type="monotone"
-                        dataKey="efficiency2"
-                        stroke="#ff8c00"
-                        fill="#ff8c00"
-                        fillOpacity={0.4}
-                        onMouseEnter={handleAreaEnter}
-                        onMouseLeave={handleAreaLeave}
-                        strokeWidth={2}
-                        name="Master 2"
-                    />
-                    {/* Area for Master 3 */}
-                    <Area
-                        type="monotone"
-                        dataKey="efficiency3"
-                        stroke="#4caf50"
-                        fill="#4caf50"
-                        fillOpacity={0.4}
-                        onMouseEnter={handleAreaEnter}
-                        onMouseLeave={handleAreaLeave}
-                        strokeWidth={2}
-                        name="Master 3"
-                    />
+                    <Area type="monotone" dataKey="efficiency" stroke="#536def" fill="#536def" fillOpacity={0.4} strokeWidth={2} name="Master 1" />
+                    <Area type="monotone" dataKey="efficiency2" stroke="#ff8c00" fill="#ff8c00" fillOpacity={0.4} strokeWidth={2} name="Master 2" />
+                    <Area type="monotone" dataKey="efficiency3" stroke="#4caf50" fill="#4caf50" fillOpacity={0.4} strokeWidth={2} name="Master 3" />
                 </AreaChart>
             </ResponsiveContainer>
         </div>

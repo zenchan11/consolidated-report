@@ -1,6 +1,5 @@
 import { MongoClient } from 'mongodb';
 
-// Correct the typo in the MongoDB URI if needed
 const MONGO_URI = 'mongodb+srv://ngawang:ngawang@cluster0.gdjtgmf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 const DATABASE_NAME = 'consolidated';
 
@@ -35,10 +34,10 @@ export default async (req, res) => {
 
   try {
     const db = await connectToDatabase();
-    const data = await db.collection('party_total').find().toArray();
+    const data = await db.collection('matching_efficiency').find().toArray();
     res.status(200).json(data);
   } catch (error) {
     console.error('❌ Failed to fetch data:', error);
-    res.status(500).json({ error: 'Failed to fetch party total data' });
+    res.status(500).json({ error: 'Failed to fetch matching efficiency data' });
   }
 };

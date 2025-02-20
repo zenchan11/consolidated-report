@@ -10,7 +10,7 @@ const Login = ({ setIsAuthenticated }) => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-
+  
     // Hardcoded credentials
     if ((username === 'admin' &&  password === 'password')|| (username === 'tibet' && password === 'tibetcarpet')) {
       setIsAuthenticated(true);
