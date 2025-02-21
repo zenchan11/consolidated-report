@@ -23,7 +23,7 @@ function App() {
       {!isLoginPage && (
         <aside className="sidebar">
           <div className="logo">
-            <Link to="/" className="text_none">My App Testing</Link>
+            <Link to="/" className="text_none">TIBET CARPET </Link>
           </div>
           <div className="links">
             <ul>
