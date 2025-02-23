@@ -75,7 +75,7 @@ function DyeingMasters() {
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    {headers.map((header, insdex) => (
+                                    {headers.map((header, index) => (
                                         <TableCell key={index} style={{ fontWeight: 'bold' }}>{header}</TableCell>
                                     ))}
                                 </TableRow>
