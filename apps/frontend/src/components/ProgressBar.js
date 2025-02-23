@@ -2,21 +2,15 @@ import React from 'react';
 import { Pie, PieChart, ResponsiveContainer, Tooltip, Cell, Legend } from 'recharts';
 import './ProgressBar.scss'; // Import your existing CSS
 
-function ProgressBar() {
-    // Data for the Pie Chart representing carpet counts
-    const carpetData = [
-        { name: 'Fresh Dyeing', value: 120 },
-        { name: 'Redyeing', value: 45 },
-        { name: 'Additional Dyeing', value: 30 },
-    ];
-
-    // Custom colors for each segment
-    const COLORS = ['#536def', '#ff8c00', '#4caf50'];
+function ProgressBar({ title = 'Carpet Dyeing Summary', data, colors = ['#536def', '#ff8c00', '#4caf50'] }) {
+    if (!data || data.length === 0) {
+        return <p>No data available</p>;
+    }
 
     return (
         <div className="progress_bar">
             <div className="top">
-                <p>Carpet Dyeing Summary</p>
+                <p>{title}</p>
             </div>
 
             <div className="middle">
@@ -25,16 +19,15 @@ function ProgressBar() {
                         <PieChart>
                             <Pie
                                 dataKey="value"
-                                data={carpetData}
+                                data={data}
                                 cx="50%"
                                 cy="50%"
                                 outerRadius={80}
-                                fill="#8884d8"
-                                label={({ name, value }) => `${name}: ${value}`}
                                 innerRadius={60} // Creates a donut chart effect
+                                label={({ name, value }) => `${name}: ${value}`}
                             >
-                                {carpetData.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                {data.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
                                 ))}
                             </Pie>
                             <Tooltip />
