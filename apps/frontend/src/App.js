@@ -25,7 +25,6 @@ function App() {
         <aside className="sidebar">
           <div className="logo">
           <Link to="/" className="text_none" style={{ display: 'flex', alignItems: 'center' }}><img src={logo} alt="Tibet Carpet Logo" style={{ width: '50px', marginRight: '10px' }} />TIBET CARPET</Link>
-            {/* <Link to="/" className="text_none"><img src={logo} alt='' style={{ width: '50px', marginRight: '10px' }}></img>TIBET CARPET</Link> */}
           </div>
           <div className="links">
             <ul>
@@ -45,13 +44,13 @@ function App() {
               <li>
                 <Link to="/yarn-overview" className="text_none">
                   <span className="icon">🧵</span>
-                  Yarn Overview
+                  Dyed Yarn Store
                 </Link>
               </li>
               <li>
                 <Link to="/yarn-issued" className="text_none">
                   <span className="icon">📜</span>
-                  Yarn Issued
+                  Undyed Yarn Store
                 </Link>
               </li>
               <li>
