@@ -10,21 +10,31 @@ import Dashboard from "./components/Dashboard";
 import YarnOverview from "./components/YarnOverview";
 import TotalColors from "./components/TotalColors";
 import ProtectedRoute from "./components/ProtectedRoute";
+import UploadData from "./components/UploadData";
 import logo from './tibetcarpetlogo.png';
 import "./App.scss";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState('');
   const location = useLocation();
 
   const isLoginPage = location.pathname === "/";
+
+  const handleLogin = (role) => {
+    setIsAuthenticated(true);
+    setUserRole(role);
+  };
 
   return (
     <div className="app">
       {!isLoginPage && (
         <aside className="sidebar">
           <div className="logo">
-          <Link to="/" className="text_none" style={{ display: 'flex', alignItems: 'center' }}><img src={logo} alt="Tibet Carpet Logo" style={{ width: '50px', marginRight: '10px' }} />TIBET CARPET</Link>
+            <Link to="/" className="text_none" style={{ display: 'flex', alignItems: 'center' }}>
+              <img src={logo} alt="Tibet Carpet Logo" style={{ width: '50px', marginRight: '10px' }} />
+              TIBET CARPET
+            </Link>
           </div>
           <div className="links">
             <ul>
@@ -77,6 +87,14 @@ function App() {
                   Total Colors
                 </Link>
               </li>
+              {isAuthenticated && userRole === 'supervisor' && (
+                <li>
+                  <Link to="/upload-data" className="text_none">
+                    <span className="icon">📤</span>
+                    Upload Data
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
         </aside>
@@ -84,19 +102,27 @@ function App() {
 
       <main className={`content ${isLoginPage ? "full-page" : ""}`}>
         <Routes>
-          {/* Redirect to Dashboard if already authenticated */}
           <Route
             path="/"
             element={
-              isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login setIsAuthenticated={setIsAuthenticated} />
+              isAuthenticated ? 
+                <Navigate to="/dashboard" replace /> : 
+                <Login setIsAuthenticated={handleLogin} />
             }
           />
-
           <Route
             path="/dashboard"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/upload-data"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated} requiredRole="supervisor" userRole={userRole}>
+                <UploadData />
               </ProtectedRoute>
             }
           />

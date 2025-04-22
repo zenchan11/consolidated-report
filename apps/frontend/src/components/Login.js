@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Login.scss'; // Import the SCSS file
+import './Login.scss';
 
 const Login = ({ setIsAuthenticated }) => {
   const [username, setUsername] = useState('');
@@ -11,13 +11,19 @@ const Login = ({ setIsAuthenticated }) => {
   const handleLogin = (e) => {
     e.preventDefault();
   
-    // Hardcoded credentials
-    if ((username === 'admin' &&  password === 'password')|| (username === 'tibet' && password === 'tibetcarpet')) {
-      setIsAuthenticated(true);
-      navigate('/dashboard'); // Redirect to dashboard after login
+    // Determine user role based on credentials
+    let role = '';
+    if (username === 'supervisor' && password === 'P@$$word') {
+      role = 'supervisor';
+    } else if (username === 'tibet' && password === 'tibetcarpet') {
+      role = 'user';
     } else {
       setError('Invalid username or password');
+      return;
     }
+    
+    setIsAuthenticated(role);
+    navigate('/dashboard');
   };
 
   return (

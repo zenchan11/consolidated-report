@@ -1,10 +1,15 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 
-const ProtectedRoute = ({ isAuthenticated, children }) => {
+const ProtectedRoute = ({ isAuthenticated, requiredRole, userRole, children }) => {
   if (!isAuthenticated) {
-    return <Navigate to="/" replace />; // Redirect to login if not authenticated
+    return <Navigate to="/" replace />;
   }
+  
+  if (requiredRole && userRole !== requiredRole) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  
   return children;
 };
 
