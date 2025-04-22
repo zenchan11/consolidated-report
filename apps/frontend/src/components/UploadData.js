@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import * as XLSX from 'xlsx';
 import './UploadData.scss';
 
 const UploadData = () => {
@@ -8,6 +9,32 @@ const UploadData = () => {
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
+  };
+
+  const processExcel = async (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      
+      reader.onload = (e) => {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          
+          const result = {};
+          workbook.SheetNames.forEach(sheetName => {
+            const worksheet = workbook.Sheets[sheetName];
+            result[sheetName] = XLSX.utils.sheet_to_json(worksheet);
+          });
+          
+          resolve(result);
+        } catch (error) {
+          reject(error);
+        }
+      };
+      
+      reader.onerror = (error) => reject(error);
+      reader.readAsArrayBuffer(file);
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -20,14 +47,35 @@ const UploadData = () => {
     setIsLoading(true);
     setMessage('');
 
-    // Simulate file upload (replace with actual API call)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setMessage('File uploaded successfully!');
+      // Process Excel file
+      const excelData = await processExcel(file);
+      
+      // Prepare payload matching your API structure
+      const payload = {
+        sheets: excelData
+      };
+
+      // Send to backend
+    //   const response = await fetch('http://localhost:3000/upload-json', {
+      const response = await fetch('https://consolidated-backend-tan.vercel.app/api/upload-json', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      setMessage(result.message || 'Data uploaded successfully!');
       setFile(null);
       document.getElementById('file-upload').value = '';
     } catch (error) {
-      setMessage('Error uploading file');
+      setMessage(error.message || 'Error processing Excel file');
     } finally {
       setIsLoading(false);
     }
@@ -38,7 +86,7 @@ const UploadData = () => {
       <h2>Excel Data Upload</h2>
       <p className="instructions">
         Upload Excel files (.xlsx, .xls) to update system data. 
-        Only supervisors can access this feature.
+        The file should contain sheets matching your data structure.
       </p>
       
       <form onSubmit={handleSubmit}>
@@ -46,7 +94,7 @@ const UploadData = () => {
           <input
             id="file-upload"
             type="file"
-            accept=".xlsx, .xls, .csv"
+            accept=".xlsx, .xls"
             onChange={handleFileChange}
             className="file-input"
           />
@@ -60,7 +108,7 @@ const UploadData = () => {
           className="upload-button"
           disabled={isLoading || !file}
         >
-          {isLoading ? 'Uploading...' : 'Upload Data'}
+          {isLoading ? 'Processing...' : 'Upload Data'}
         </button>
       </form>
       

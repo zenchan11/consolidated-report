@@ -10,7 +10,8 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 }));
-
+app.use(express.json({ limit: '10mb' })); // Increase payload limit if needed
+app.use(express.urlencoded({ extended: true }));
 // MongoDB connection setup
 const MONGO_URI = 'mongodb://localhost:27017'; // Replace with your MongoDB URI
 const DATABASE_NAME = 'consolidated'; // Replace with your database name
@@ -98,6 +99,85 @@ app.get('/fresh-redyeing-additional', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch party total data' });
     }
 });
+app.post('/upload-json', async (req, res) => {
+    console.log('Received body:', req.body); // Debug log
+    
+    try {
+        // Validate request body
+        if (!req.body || !req.body.sheets) {
+            return res.status(400).json({ 
+                error: 'Invalid request format',
+                message: 'Request body must contain "sheets" property'
+            });
+        }
+
+        // Define your collection mapping with proper sheet name handling
+        const COLLECTION_MAP = {
+            'Dyed Store': 'dyed_store',
+            'Matching Efficiency': 'matching_efficiency',
+            'Fresh Redyeing Additional': 'fresh_redyeing_additional_',  // Note: No trailing space
+            'Fresh Redyeing Additional ': 'fresh_redyeing_additional_', // Handle both versions
+            'Undyed Yarn': 'undyed_yarn',
+            'Total Color Used': 'total_color_used',
+            'Available Section': 'available_section',
+            'Total Order Received': 'total_order_received'
+        };
+
+        const { sheets } = req.body;
+        const results = [];
+
+        // Process each sheet
+        for (const [sheetName, data] of Object.entries(sheets)) {
+            // Normalize sheet name by trimming whitespace
+            const normalizedSheetName = sheetName.trim();
+            
+            if (COLLECTION_MAP[normalizedSheetName]) {
+                try {
+                    const collectionName = COLLECTION_MAP[normalizedSheetName];
+                    const collection = db.collection(collectionName);
+                    
+                    // Clear existing data
+                    await collection.deleteMany({});
+                    
+                    // Insert new data (if array and not empty)
+                    if (Array.isArray(data) && data.length > 0) {
+                        const result = await collection.insertMany(data);
+                        results.push({
+                            sheet: normalizedSheetName,
+                            collection: collectionName,
+                            insertedCount: result.insertedCount
+                        });
+                    }
+                } catch (sheetError) {
+                    console.error(`Error processing sheet ${normalizedSheetName}:`, sheetError);
+                    results.push({
+                        sheet: normalizedSheetName,
+                        error: sheetError.message
+                    });
+                }
+            } else {
+                console.warn(`No collection mapping found for sheet: "${sheetName}"`);
+                results.push({
+                    sheet: sheetName,
+                    warning: 'No collection mapping found'
+                });
+            }
+        }
+
+        res.json({ 
+            message: 'Data processed successfully',
+            results
+        });
+    } catch (error) {
+        console.error('Server error:', error);
+        res.status(500).json({ 
+            error: 'Server error',
+            details: error.message,
+            receivedBody: req.body // For debugging
+        });
+    }
+});
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
