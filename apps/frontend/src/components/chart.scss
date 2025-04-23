@@ -1,16 +1,128 @@
 .chart_sec {
-    background: #fff;
+    font-family: 'Arial', sans-serif;
     padding: 20px;
+    background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slightly darker shadow for better contrast */
-    margin: 20px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
 
     .title {
-        font-size: 24px; /* Slightly larger title */
-        margin-bottom: 15px;
-        color: #222; /* Brighter and bolder text */
-        text-align: center;
-        font-weight: 600;
+        margin-bottom: 20px;
+        p {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+    }
+
+    .bar-chart-container {
+        display: flex;
+        height: 300px;
+        align-items: flex-end;
+        gap: 15px;
+        padding: 20px 0;
+        border-bottom: 1px solid #eee;
+        overflow-x: auto;
+
+        .bar-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 60px;
+            height: 100%;
+        }
+
+        .bar-label {
+            font-size: 12px;
+            margin-bottom: 5px;
+            text-align: center;
+            white-space: nowrap;
+            transform: rotate(-45deg);
+            transform-origin: left;
+            height: 40px;
+            width: 100%;
+            padding-left: 20px;
+            color: #666;
+        }
+
+        .bars-container {
+            display: flex;
+            gap: 5px;
+            height: 100%;
+            align-items: flex-end;
+            width: 100%;
+        }
+
+        .bar {
+            width: 25px;
+            position: relative;
+            transition: height 0.3s ease;
+            border-radius: 4px 4px 0 0;
+
+            .bar-value {
+                position: absolute;
+                top: -25px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 10px;
+                background: rgba(0, 0, 0, 0.7);
+                color: white;
+                padding: 2px 5px;
+                border-radius: 4px;
+                opacity: 0;
+                transition: opacity 0.2s;
+            }
+
+            &:hover {
+                .bar-value {
+                    opacity: 1;
+                }
+            }
+        }
+
+        .fs-bar {
+            background-color: #536def;
+            &:hover {
+                background-color: #3a56d4;
+            }
+        }
+
+        .cs-bar {
+            background-color: #f57c00;
+            &:hover {
+                background-color: #e07100;
+            }
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            position: absolute;
+            top: 30px;
+            right: 20px;
+
+            .legend-item {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                font-size: 12px;
+            }
+
+            .legend-color {
+                width: 15px;
+                height: 15px;
+                border-radius: 3px;
+            }
+
+            .fs-legend {
+                background-color: #536def;
+            }
+
+            .cs-legend {
+                background-color: #f57c00;
+            }
+        }
     }
 
     .table_sec {
@@ -19,70 +131,34 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
-            font-size: 15px; /* Slightly larger text for readability */
-            text-align: left;
 
             th, td {
-                padding: 10px 14px; /* Added padding for more space */
-                border: 1px solid #bbb; /* Darker border for visibility */
+                padding: 10px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
             }
 
             th {
-                background-color: #3f51b5; /* Bright blue for headers */
-                color: #fff; /* White text for contrast */
+                background-color: #f5f5f5;
                 font-weight: bold;
-                text-transform: uppercase; /* Capitalize header text */
-            }
-
-            tr:nth-child(even) {
-                background-color: #e3f2fd; /* Light blue for even rows */
-            }
-
-            tr:nth-child(odd) {
-                background-color: #ffffff; /* White for odd rows */
             }
 
             tr:hover {
-                background-color: #bbdefb; /* Brighter blue for hover effect */
-                cursor: pointer;
-            }
-
-            td {
-                color: #333; /* Darker text for better readability */
+                background-color: #f9f9f9;
             }
         }
     }
 
-    /* Make sure the chart takes up 100% of its container */
-    .chart_container {
-        width: 100%; /* Ensure full width */
-        height: 300px; /* Can be adjusted as needed */
-        margin-top: 20px;
-    }
-
-    /* Total sum section */
     .total_sum {
         margin-top: 20px;
-        font-size: 16px; /* Slightly larger text for total sums */
-        font-weight: 600;
+        padding: 15px;
+        background-color: #f5f5f5;
+        border-radius: 5px;
 
         p {
             margin: 5px 0;
-            color: #333; /* Darker color for readability */
-        }
-    }
-
-    /* Responsive Design for smaller screens */
-    @media (max-width: 768px) {
-        padding: 15px; /* Reduce padding on small screens */
-        
-        .title {
-            font-size: 20px; /* Slightly smaller title for smaller screens */
-        }
-
-        .table_sec table {
-            font-size: 14px; /* Slightly smaller text for smaller screens */
+            font-size: 14px;
+            color: #333;
         }
     }
 }

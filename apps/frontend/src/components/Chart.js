@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts';
-import { infinity} from 'ldrs';
+import { infinity } from 'ldrs';
 import { Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import './chart.scss';
@@ -12,12 +11,11 @@ function Chart({ height, title }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch('https://consolidated-backend-tan.vercel.app/api/total-order-received') // Replace with your endpoint
+        fetch('https://consolidated-backend-tan.vercel.app/api/total-order-received')
             .then((response) => response.json())
             .then((rawData) => {
-                // Filter and transform the data
                 const cleanedData = rawData
-                    .filter((row) => row["Party Name"] && row["Party Name"] !== "TOTAL ") // Ignore after TOTAL
+                    .filter((row) => row["Party Name"] && row["Party Name"] !== "TOTAL ")
                     .map((row) => ({
                         name: row["Party Name"],
                         FS: row["F Total Sq.mt"] || 0,
@@ -26,8 +24,10 @@ function Chart({ height, title }) {
                 setData(cleanedData);
                 setLoading(false);
             })
-            .catch((error) => console.error('Error fetching chart data:', error));
-            setLoading(false);
+            .catch((error) => {
+                console.error('Error fetching chart data:', error);
+                setLoading(false);
+            });
     }, []);
 
     if (loading) {
@@ -38,63 +38,62 @@ function Chart({ height, title }) {
         );
     }
 
-    // Calculate total FS and CS, and total combined sum
     const totalFS = data.reduce((sum, row) => sum + row.FS, 0).toFixed(2);
     const totalCS = data.reduce((sum, row) => sum + row.CS, 0).toFixed(2);
     const totalCombined = (parseFloat(totalFS) + parseFloat(totalCS)).toFixed(2);
 
+    // Find the maximum value for scaling
+    const maxValue = Math.max(
+        ...data.map(item => Math.max(item.FS, item.CS)),
+        parseFloat(totalFS),
+        parseFloat(totalCS)
+    );
+
     return (
         <div className="chart_sec">
-            {/* Chart Section */}
             <div className="title">
                 <p>{title} (Last Month)</p>
             </div>
-            <div style={{ width: '100%', height: 300 }}>
-                <AreaChart
-                    width={850}
-                    height={height}
-                    data={data}
-                    margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                >
-                    <defs>
-                        <linearGradient id="FS" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#536def" stopOpacity={0.9} />
-                            <stop offset="95%" stopColor="#536def" stopOpacity={0} />
-                        </linearGradient>
-                        <linearGradient id="CS" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#f57c00" stopOpacity={0.9} />
-                            <stop offset="95%" stopColor="#f57c00" stopOpacity={0} />
-                        </linearGradient>
-                    </defs>
-                    <XAxis dataKey="name" stroke="gray" />
-                    <YAxis />
-                    <CartesianGrid strokeDasharray="3 3" className="strokee" />
-                    <Tooltip />
-                    {/* FS Area */}
-                    <Area
-                        type="monotone"
-                        dataKey="FS"
-                        stroke="#536def"
-                        fillOpacity={1}
-                        fill="url(#FS)"
-                        name="F Total Sq.mt"
-                    />
-                    {/* CS Area */}
-                    <Area
-                        type="monotone"
-                        dataKey="CS"
-                        stroke="#f57c00"
-                        fillOpacity={1}
-                        fill="url(#CS)"
-                        name="C Total Sq.mt"
-                    />
-                </AreaChart>
+            
+            {/* Custom Bar Chart Section */}
+            <div className="bar-chart-container">
+                {data.map((item, index) => (
+                    <div key={index} className="bar-group">
+                        <div className="bar-label">{item.name}</div>
+                        <div className="bars-container">
+                            <div 
+                                className="bar fs-bar" 
+                                style={{ height: `${(item.FS / maxValue) * 100}%` }}
+                                title={`FS: ${item.FS}`}
+                            >
+                                <span className="bar-value">{item.FS.toFixed(2)}</span>
+                            </div>
+                            <div 
+                                className="bar cs-bar" 
+                                style={{ height: `${(item.CS / maxValue) * 100}%` }}
+                                title={`CS: ${item.CS}`}
+                            >
+                                <span className="bar-value">{item.CS.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+                <div className="legend">
+                    <div className="legend-item">
+                        <div className="legend-color fs-legend"></div>
+                        <span>F Total Sq.mt</span>
+                    </div>
+                    <div className="legend-item">
+                        <div className="legend-color cs-legend"></div>
+                        <span>C Total Sq.mt</span>
+                    </div>
+                </div>
             </div>
 
             {/* Table Section with Accordion */}
-            <div className="table_sec" style={{ marginTop: '20px' }}>
+            <div className="table_sec">
                 <Accordion>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography>Table Data</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
@@ -121,10 +120,10 @@ function Chart({ height, title }) {
             </div>
 
             {/* Total Sum Section */}
-            <div className="total_sum" style={{ marginTop: '20px' }}>
+            <div className="total_sum">
                 <p><strong>Total F Total Sq.mt: </strong>{totalFS}</p>
                 <p><strong>Total C Total Sq.mt: </strong>{totalCS}</p>
-                <p><strong>Total Combined Sq.mt: </strong>{totalCombined}</p> {/* Combined Total */}
+                <p><strong>Total Combined Sq.mt: </strong>{totalCombined}</p>
             </div>
         </div>
     );
