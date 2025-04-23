@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { infinity } from 'ldirs';
+import { infinity } from 'ldrs';
 import { Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import './chart.scss';
