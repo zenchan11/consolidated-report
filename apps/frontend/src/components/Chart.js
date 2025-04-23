@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { infinity } from 'ldrs';
+import { infinity } from 'ldirs';
 import { Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import './chart.scss';
 
-infinity.register()
+infinity.register();
 
 function Chart({ height, title }) {
     const [data, setData] = useState([]);
@@ -18,8 +18,8 @@ function Chart({ height, title }) {
                     .filter((row) => row["Party Name"] && row["Party Name"] !== "TOTAL ")
                     .map((row) => ({
                         name: row["Party Name"],
-                        FS: row["F Total Sq.mt"] || 0,
-                        CS: row["C Total Sq. mt."] || 0,
+                        FS: parseFloat(row["F Total Sq.mt"] || 0),
+                        CS: parseFloat(row["C Total Sq. mt."] || 0),
                     }));
                 setData(cleanedData);
                 setLoading(false);
@@ -57,27 +57,31 @@ function Chart({ height, title }) {
             
             {/* Custom Bar Chart Section */}
             <div className="bar-chart-container">
-                {data.map((item, index) => (
-                    <div key={index} className="bar-group">
-                        <div className="bar-label">{item.name}</div>
-                        <div className="bars-container">
-                            <div 
-                                className="bar fs-bar" 
-                                style={{ height: `${(item.FS / maxValue) * 100}%` }}
-                                title={`FS: ${item.FS}`}
-                            >
-                                <span className="bar-value">{item.FS.toFixed(2)}</span>
+                <div className="bars-wrapper">
+                    {data.map((item, index) => (
+                        <div key={index} className="bar-group">
+                            <div className="bars-container">
+                                <div 
+                                    className="bar fs-bar" 
+                                    style={{ height: `${(item.FS / maxValue) * 80}%` }}
+                                    title={`FS: ${item.FS.toFixed(2)}`}
+                                >
+                                    <span className="bar-value">{item.FS.toFixed(2)}</span>
+                                </div>
+                                <div 
+                                    className="bar cs-bar" 
+                                    style={{ height: `${(item.CS / maxValue) * 80}%` }}
+                                    title={`CS: ${item.CS.toFixed(2)}`}
+                                >
+                                    <span className="bar-value">{item.CS.toFixed(2)}</span>
+                                </div>
                             </div>
-                            <div 
-                                className="bar cs-bar" 
-                                style={{ height: `${(item.CS / maxValue) * 100}%` }}
-                                title={`CS: ${item.CS}`}
-                            >
-                                <span className="bar-value">{item.CS.toFixed(2)}</span>
+                            <div className="bar-label">
+                                {item.name.length > 12 ? `${item.name.substring(0, 10)}...` : item.name}
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
                 <div className="legend">
                     <div className="legend-item">
                         <div className="legend-color fs-legend"></div>
@@ -109,8 +113,8 @@ function Chart({ height, title }) {
                                 {data.map((row, index) => (
                                     <tr key={index}>
                                         <td>{row.name}</td>
-                                        <td>{row.FS}</td>
-                                        <td>{row.CS}</td>
+                                        <td>{row.FS.toFixed(2)}</td>
+                                        <td>{row.CS.toFixed(2)}</td>
                                     </tr>
                                 ))}
                             </tbody>
